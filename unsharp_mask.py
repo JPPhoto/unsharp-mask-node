@@ -2,22 +2,20 @@
 
 
 import numpy as np
-from PIL import Image, ImageFilter
-
 from invokeai.app.invocations.baseinvocation import (
     BaseInvocation,
     InputField,
     InvocationContext,
     WithMetadata,
-    WithWorkflow,
     invocation,
 )
 from invokeai.app.invocations.primitives import ImageField, ImageOutput
 from invokeai.app.services.image_records.image_records_common import ImageCategory, ResourceOrigin
+from PIL import Image, ImageFilter
 
 
 @invocation("unsharp_mask", title="Unsharp Mask", tags=["unsharp_mask"], version="1.0.0")
-class UnsharpMaskInvocation(BaseInvocation, WithMetadata, WithWorkflow):
+class UnsharpMaskInvocation(BaseInvocation, WithMetadata):
     """Applies an unsharp mask filter to an image"""
 
     image: ImageField = InputField(description="The image to use")
@@ -57,7 +55,7 @@ class UnsharpMaskInvocation(BaseInvocation, WithMetadata, WithWorkflow):
             session_id=context.graph_execution_state_id,
             is_intermediate=self.is_intermediate,
             metadata=self.metadata,
-            workflow=self.workflow,
+            workflow=context.workflow,
         )
 
         return ImageOutput(
